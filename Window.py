@@ -6,7 +6,6 @@ class Window:
         self._size = size
 
         self._win = pygame.display.set_mode(size)
-        self._win.blit()
         pygame.display.set_caption(title)
 
     def get_size(self):
@@ -23,3 +22,6 @@ class Window:
 
     def fill(self, color):
         self._win.fill(color)
+
+    def draw_obj(self, obj, draw_pos):
+        self._win.blit(obj, draw_pos)
