@@ -1,4 +1,3 @@
-from Tile import Tile
 from pygame import Rect
 
 # Corners:
