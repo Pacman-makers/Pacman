@@ -1,4 +1,4 @@
-from pygame import Rect
+from pygame import Rect, Surface
 
 # Corners:
 # 1 for Upper Left
@@ -7,38 +7,37 @@ from pygame import Rect
 # 4 for Lower Right
 # . for Nothing
 
-# Vertical Bars:
-# V for Vertical                 UUUU
-# U for Upper Vertical          UUUUUU
-# D for Lower Vertical         V |||| V
-# | for Middle Vertical        V |||| V
-#                              V |||| V
-#                               DDDDDD
-#                                DDDD
-#
+# Vertical bars:
+# L for Left
+# R for Right
 
-# Horizontal Bars:
-# H for Horizontal
-# L for Left Horizontal        LLL HHHHHHHHH RRR
-# R for Right Horizontal     LLLL ----------- RRRR
-# - for Middle Horizontal      LLL HHHHHHHHH RRR
+# Horizontal bars:
+# U for Upper
+# D for Lower
+
+# Field parts:
+# 5 for Upper Left Strong
+# 6 for Upper Right Strong
+# 7 for Lower Left Strong
+# 8 for Lower Right Strong
 
 tile_dict = {
+    # Bars and corners
     '1': (0, 0),
-    '2': (2, 0),
-    '3': (0, 2),
-    '4': (2, 2),
+    '2': (5, 0),
+    '3': (0, 5),
+    '4': (5, 5),
+    'U': (1, 0),
+    'D': (1, 5),
+    'L': (0, 1),
+    'R': (5, 1),
     '.': (1, 1),
 
-    'V': (0, 1),
-    'U': (6, 0),
-    'D': (6, 2),
-    '|': (6, 1),
-
-    'H': (1, 0),
-    'L': (7, 0),
-    'R': (9, 0),
-    '-': (8, 0)
+    # Strong corners
+    '5': (7, 1),
+    '6': (8, 1),
+    '7': (7, 2),
+    '8': (8, 2),
 }
 
 
@@ -78,10 +77,10 @@ class Map:
                     self._tile_size[0], self._tile_size[1])))
 
     def _create_tile_map(self):
-        for i in range(len(self._map)):
+        for i in range(len(self._map[0])):
             self._tile_map.append([])
-            for j in range(len(self._map[i])):
-                temp_id = tile_dict[self._map[i][j]]
+            for j in range(len(self._map)):
+                temp_id = tile_dict[self._map[j][i]]
                 self._tile_map[i].append(
                     self._tile_list[temp_id[0]][temp_id[1]])
 
