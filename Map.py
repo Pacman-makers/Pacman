@@ -1,4 +1,4 @@
-from pygame import Rect, Surface
+from pygame import Rect, Surface, SRCALPHA
 
 # Corners:
 # 1 for Upper Left
@@ -31,7 +31,6 @@ tile_dict = {
     'D': (1, 5),
     'L': (0, 1),
     'R': (5, 1),
-    '.': (1, 1),
 
     # Strong corners
     '5': (7, 1),
@@ -80,9 +79,13 @@ class Map:
         for i in range(len(self._map[0])):
             self._tile_map.append([])
             for j in range(len(self._map)):
-                temp_id = tile_dict[self._map[j][i]]
-                self._tile_map[i].append(
-                    self._tile_list[temp_id[0]][temp_id[1]])
+                if self._map[j][i] not in (' ', '.'):
+                    temp_id = tile_dict[self._map[j][i]]
+                    self._tile_map[i].append(
+                        self._tile_list[temp_id[0]][temp_id[1]])
+                else:
+                    self._tile_map[i].append(
+                        Surface(self._tile_size, SRCALPHA))
 
     def get_filename(self):
         return self._filename
@@ -101,3 +104,10 @@ class Map:
 
     def get_tile_map(self):
         return self._tile_map
+
+    def draw_tile_map(self, window, offset):
+        for i in range(len(self._tile_map)):
+            for j in range(len(self._tile_map[0])):
+                if self._tile_map[i][j]:
+                    window.draw_obj(self._tile_map[i][j],
+                                    (16 * i + offset[0], 16 * j + offset[1]))
