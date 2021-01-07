@@ -17,6 +17,12 @@ class Window:
     def get_context(self):
         return self._win
 
+    def get_mouse_pressed(self):
+        return pygame.mouse.get_pressed()
+
+    def get_mouse_pos(self):
+        return pygame.mouse.get_pos()
+
     def set_title(self, title):
         pygame.display.set_caption(title)
 
@@ -25,3 +31,6 @@ class Window:
 
     def draw_obj(self, obj, draw_pos):
         self._win.blit(obj, draw_pos)
+
+    def draw_rect(self, rect, color):
+        pygame.draw.rect(self._win, color, rect)
