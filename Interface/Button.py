@@ -86,7 +86,7 @@ class Button:
     def update(self, *args):
         if self.is_clicked():
             if self._proc and self.contains_mouse():
-                self._proc(*args)
+                self._proc(self, *args)
 
     def draw(self):
         if self._shown:
