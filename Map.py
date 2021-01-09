@@ -41,10 +41,11 @@ tile_dict = {
 
 
 class Map:
-    def __init__(self, filename, spr_sheet, tile_size):
+    def __init__(self, filename, spr_sheet, tile_size, draw_offset=(0, 0)):
         self._filename = filename
         self._spr_sheet = spr_sheet
         self._tile_size = tile_size
+        self._offset = draw_offset
 
         self._tile_list = []
         self._load_tiles()
@@ -96,6 +97,9 @@ class Map:
     def get_tile_size(self):
         return self._tile_size
 
+    def get_draw_offset(self):
+        return self._offset
+
     def get_text_map(self):
         return self._map
 
@@ -105,9 +109,25 @@ class Map:
     def get_tile_map(self):
         return self._tile_map
 
-    def draw_tile_map(self, window, offset):
+    def set_draw_offset(self, offset):
+        self._offset = offset
+
+    def extract_rect_map(self):
+        temp_map = []
+        for i in range(len(self._tile_map)):
+            temp_map.append([])
+            for j in range(len(self._tile_map[0])):
+                temp_rect = self._tile_map[i][j].get_rect()
+                temp_rect.x = self._tile_size[0] * i + self._offset[0]
+                temp_rect.y = self._tile_size[1] * j + self._offset[1]
+                temp_map[i].append(temp_rect)
+
+        return temp_map
+
+    def draw_tile_map(self, window):
         for i in range(len(self._tile_map)):
             for j in range(len(self._tile_map[0])):
                 if self._tile_map[i][j]:
                     window.draw_obj(self._tile_map[i][j],
-                                    (16 * i + offset[0], 16 * j + offset[1]))
+                                    (self._tile_size[0] * i + self._offset[0],
+                                     self._tile_size[1] * j + self._offset[1]))
