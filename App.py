@@ -5,6 +5,9 @@ from Window import Window
 from Animation import Animation
 from Map import Map
 from Interface.Button import Button
+from characters import Pacman
+from music import Music
+from pygame.transform import scale
 
 TICK = 64
 
@@ -66,8 +69,13 @@ class App:
         self.stop = True
         self.running = True
 
-        self.animation = Animation(load_image("pacman-sheet.png"), (730, 310), (80, 101), (1, 10))
-        self.animation2 = Animation(load_image("pacman-sheet.png"), (830, 310), (80, 101), (1, 2))
+        self.pacman = Pacman(0, 0, 3)
+        self.move = (0, 0)
+
+        self.mus = Music()
+
+        self.animation = Animation(load_image("pacman-sheet.png"), (730, 310), (80, 101), (1, 5))
+        # self.animation2 = Animation(load_image("pacman-sheet.png"), (830, 310), (80, 101), (1, 2))
         self.map = Map("map.txt", load_image("maze_tile.png"), (16, 16))
         # self.map = Map("map.txt", load_image("maze_tile.png"), (16, 16)).get_tile_list()
 
@@ -76,14 +84,15 @@ class App:
 
     def update(self):
         self.animation.update(0.1)
-        self.animation2.update(0.1)
+        # self.animation2.update(0.1)
 
     def draw(self):
         self.map.draw_tile_map(self.window, (13, 80))
-        self.window.draw_obj(self.animation.get_curr_image(), (0, 0))
+        self.window.draw_obj(self.animation.get_curr_image(), (self.pacman.get_x(), self.pacman.get_y()))
         # self.window.draw_obj(self.animation2.get_curr_image(), (64, 0))
 
     def run(self):
+        self.mus.change_music('231')  # Если поставить "1" будет музыка
         while self.running:
             self.clock.tick(TICK)
 
@@ -95,6 +104,16 @@ class App:
                         self.running = False
                     elif event.key == pygame.K_p:
                         self.stop = True
+                    elif event.key == pygame.K_d:
+                        self.move = (5, 0)
+                    elif event.key == pygame.K_a:
+                        self.move = (-5, 0)
+                    elif event.key == pygame.K_w:
+                        self.move = (0, -5)
+                    elif event.key == pygame.K_s:
+                        self.move = (0, 5)
+                    elif event.key == pygame.K_SPACE:
+                        self.move = (0, 0)
 
             if self.stop:
                 start_screen(self.window)
@@ -104,8 +123,22 @@ class App:
 
             self.window.fill(0)
 
+            if self.pacman.get_x() + self.move[0] * 15 > self.window.get_size()[0] or self.pacman.get_y() + \
+                    self.move[1] * 15 > self.window.get_size()[1] or self.pacman.get_x() + self.move[0] < 0 or \
+                    self.pacman.get_y() + self.move[1] < 0:
+                self.move = (0, 0)
+            # if self.window.get_context().get_at((self.pacman.get_x() + self.move[0],
+            #                                     self.pacman.get_y() + self.move[1])) != (0, 0, 0, 255):
+
+                self.move = (0, 0)
+            self.pacman.move(self.move[0], self.move[1])
+
             self.draw()
 
             pygame.display.flip()
 
         pygame.quit()
+
+
+app = App((1000, 1000), 'Pac')
+app.run()
